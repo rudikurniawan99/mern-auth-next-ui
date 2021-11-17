@@ -4,18 +4,20 @@ import { zodResolver } from '@hookform/resolvers/zod/dist/zod'
 
 
 const createUserSchema = object({
-  name: string({
-    required_error: `name can't be empty`
-  }),
-  password: string({
-    required_error: `password can't be empty`
-  }).min(8,`password too short, should have 8 characters minimum`),
-  passwordConfirmation: string({
-    required_error: `password confirmation can't be empty`
-  }),
-  email: string({
-    required_error: `email can't be empty`
-  }).nonempty('email is required').email('need valid email')
+  name: 
+    string()
+    .nonempty(`name required`),
+  password: 
+    string()
+    .nonempty('password required')
+    .min(8,`password too short, should have 8 characters minimum`),
+  passwordConfirmation: 
+    string()
+    .nonempty('password confirmation required'),
+  email: 
+    string()
+    .nonempty('email is required')
+    .email('need valid email')
 }).refine((data) => data.password === data.passwordConfirmation, {
   message: 'password not match',
   path: ['passwordConfirmation']
@@ -34,8 +36,6 @@ const RegisterPage = () => {
   const onSubmit = (values: any) => {
     console.log(values)
   }
-
-  console.log(errors)
 
   return (
     <div className="flex justify-center md:py-12">
