@@ -1,7 +1,9 @@
 import { useForm } from "react-hook-form"
-import { object, string } from "zod"
+import axios from "axios"
+import { object, string, TypeOf } from "zod"
 import { zodResolver } from '@hookform/resolvers/zod/dist/zod'
 
+type CreateUserInput = TypeOf<typeof createUserSchema>
 
 const createUserSchema = object({
   name: 
@@ -33,8 +35,12 @@ const RegisterPage = () => {
     resolver: zodResolver(createUserSchema)
   })
 
-  const onSubmit = (values: any) => {
-    console.log(values)
+  const onSubmit = async (values: CreateUserInput) => {
+    try {
+      await axios.post(`${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/users`, values) 
+    } catch (e) {
+      // console.log(e.message) 
+    }
   }
 
   return (
