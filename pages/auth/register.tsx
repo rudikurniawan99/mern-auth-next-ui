@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form"
 import axios from "axios"
 import { object, string, TypeOf } from "zod"
 import { zodResolver } from '@hookform/resolvers/zod/dist/zod'
+import { useState } from "react"
 
 type CreateUserInput = TypeOf<typeof createUserSchema>
 
@@ -27,6 +28,8 @@ const createUserSchema = object({
 
 const RegisterPage = () => {
 
+  const [registerError, setRegisterError] = useState(null)
+
   const {
     register,
     formState: {errors},
@@ -38,14 +41,15 @@ const RegisterPage = () => {
   const onSubmit = async (values: CreateUserInput) => {
     try {
       await axios.post(`${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/users`, values) 
-    } catch (e) {
-      // console.log(e.message) 
+    } catch (e: any) {
+      setRegisterError(e.message)
     }
   }
 
   return (
     <div className="flex justify-center md:py-12">
       <div className="md:w-96 md:border border-black border-opacity-10 md:shadow-lg md:rounded-lg p-8">
+        <p className="">{registerError}</p>
         <form
           onSubmit={handleSubmit(onSubmit)} 
         >
